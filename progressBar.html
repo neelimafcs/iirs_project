@@ -1,0 +1,171 @@
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+	<title>MaxGen Progress Bar</title>
+	<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+	<script src="https://code.jquery.com/jquery.js"></script>
+  <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="https://cdn.rawgit.com/kimmobrunfeldt/progressbar.js/0.5.6/dist/progressbar.js"></script>
+
+	<head>
+		<style type="text/css">
+			.progress {
+			  	width: 80%;
+			  	height:10px;
+			}
+			.progress-body{
+				width:50%;
+				position: fixed;
+				top: 5%;
+				left: 25%;
+			}
+			.summary-body{
+				width: 50%;
+				position: fixed;
+				top: 30%;
+				left: 25%;
+			}
+			#current-progress{
+				float: right;
+				width:20%;
+				margin: -35px -10px 0px 0px;
+				color:#008FBE !important;
+				font-size: 15px;
+				font-weight: bold;
+			}
+			#dynamicProgress{
+				background-color:#008FBE !important;
+			}
+			#answered-progress{
+				color:#00AFA9 !important;
+			}
+			#dynamicAnswered{
+				background-color:#00AFA9 !important;
+			}
+			#flagged-progress{
+				color:#FBB040 !important;
+			}
+			#dynamicFlagged{
+				background-color:#FBB040 !important;
+			}
+			#unanswered-progress{
+				color:#AAAAAA !important;
+			}
+			#dynamicUnanswered{
+				background-color:#AAAAAA !important;
+			}
+			
+			hr{
+				border-top: 1px solid #cfcccc;
+			}
+			h5{
+				font-size: 16px;
+				font-weight: bolder;
+				color:#428bca;
+			}
+		</style>
+
+		<script>
+			$(function() {
+
+				// PROGRESSBAR CLASS DEFINITION//
+			    var Progressbar = function (element) {
+			        this.$element = $(element);
+			    }
+
+			    //UPDATE PROGRESS BAR//
+			    Progressbar.prototype.update = function (value) {
+			    	//alert(value);
+			        var $div = this.$element.find('div');
+			        var $span = $div.find('span');
+			        $div.attr('aria-valuenow', value);
+			        $div.css('width', value + '%');
+			    } 
+
+			    //FINISH ASSESMENT//
+			    Progressbar.prototype.finish = function () {
+			        this.update(100);
+			    }
+
+			    //RESET ASSESMENT//
+			    Progressbar.prototype.reset = function () {
+			        this.update(0);
+			    }
+
+			    //PROGRESSBAR PLUGIN DEFINITION// 
+			    $.fn.progressbar = function (option) {
+			    	//alert(option);
+			        return this.each(function () {
+			        	console.log(this);
+			            var $this = $(this),
+			                data = $this.data('jbl.progressbar');
+			            if (!data) $this.data('jbl.progressbar', (data = new Progressbar(this))); 
+			            if (typeof option == 'string') data[option]();      //for reset and finish
+			            if (typeof option == 'number') data.update(option); //for number of answered
+			        })
+			    };
+
+				// PROGRESSBAR CLICK ON WITH VALUE//
+			    $('.answer').on('click', function(e){
+			    	var $this = $(this);
+			        var $target = $($this.data('target'));
+			        //var $target = $('#myProgressbar');
+			        var value = $this.data('value');
+			        e.preventDefault();
+			        $target.progressbar(value);
+			    });
+			});
+		</script>
+	</head>
+	<body>
+		<!--Assessment Body-->
+		<div class="progress-body">
+			<h5>Assesment Progress</h5>
+			<hr></hr>
+			<div class="progress" id="myProgressbar">
+				<div id="dynamicProgress" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+				</div>
+			</div>
+			<span id="current-progress">10 of 100</span>
+			<button data-target="#myProgressbar" data-value="50" type="button" class="btn btn-default active answer">Answered 50</button>
+			<button data-target="#myProgressbar" data-value="100" type="button" class="btn btn-default active answer">Answered 100</button> 
+
+			<button data-target="#myProgressbar" data-value="reset" data-level="info" class="btn btn-default active answer">Reset</button>
+			<button data-target="#myProgressbar" data-value="finish" data-level="success" class="btn btn-default active answer">Finish</button>
+		</div>
+
+		<!--Summary Body-->
+		<div class="summary-body">
+			<h5>Summary</h5>
+			<hr></hr>
+			<!--Answered-->
+			<span id="answered-progress">Answered: 5</span>
+			<div class="progress" id="answerProgressbar">
+				<div id="dynamicAnswered" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+				</div>
+			</div>
+			<span style="width: 20%;float: right;margin: -42px -10px 0 0;">
+				<button data-target="#answerProgressbar" data-value="5" type="button" class="btn btn-default active answer">Answered 5</button>
+			</span>
+			<!--Flagged-->
+			<span id="flagged-progress">Flagged: 10</span>
+			<div class="progress" id="flaggedProgressbar">
+				<div id="dynamicFlagged" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+				</div>
+			</div>
+			<span style="width: 20%;float: right;margin: -42px -10px 0 0;">
+				<button data-target="#flaggedProgressbar" data-value="10" type="button" class="btn btn-default active answer">Flagged 5</button>
+			</span>
+			<!--Unanswered-->
+			<span id="unanswered-progress">Unanswered: 15</span>
+			<div class="progress" id="unansweredProgressbar">
+				<div id="dynamicUnanswered" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+				</div>
+			</div>
+			<span style="width: 20%;float: right;margin: -42px -10px 0 0;">
+				<button data-target="#unansweredProgressbar" data-value="15" type="button" class="btn btn-default active answer">Unanswered 15</button>
+			</span>
+		</div>
+	</body>
+</html>
