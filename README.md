@@ -1,5 +1,5 @@
-# iirs_project
+#work-directory
 
-Hello This project is created dummy for codes of iirs
+Hello This branch is created for storing codes development of personal achievments and skills
 
 by Neelima Bharti
